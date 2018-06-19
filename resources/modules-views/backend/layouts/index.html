@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="{{  app()->getLocale() }}" ng-app="RDash">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <title>{{ config('app.name', 'petsNpets') }}</title>
+  <!-- STYLES -->
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/fileinput.min.css') }}" rel="stylesheet">
+  @if(app()->getLocale() == "ar")
+    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
+  @endif
+  <link rel="stylesheet" href="{{ asset('dist/lib/css/main.min.css')}}"/>
+  <!-- SCRIPTS -->
+  <script src="{{ asset('dist/lib/js/main.min.js')}}"></script>
+  <!-- Custom Scripts -->
+  <script type="text/javascript" src="{{ asset('dist/js/dashboard.min.js')}}"></script>
+</head>
+<body ng-controller="MasterCtrl">
+  <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
+
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar">
+        <li class="sidebar-main">
+          <a ng-click="toggleSidebar()">
+            Dashboard
+            <span class="menu-icon glyphicon glyphicon-transfer"></span>
+          </a>
+        </li>
+        @if (!Auth::guest())
+          @if(Auth::user()->isAdmin())
+            <li class="sidebar-list"><a href="admin/users">{{__("messages.Users")}}</a></li>
+            <li class="sidebar-list"><a href="admin/categories">Place Categories</a></li>
+            <li class="sidebar-list"><a href="admin/petsCategories">Pets Categories</a></li>
+          @endif
+            <li class="sidebar-list"><a href="admin/places">{{__("messages.Places")}}</a></li>
+        @endif
+      </ul>
+    </div>
+    <!-- End Sidebar -->
+
+    <div id="content-wrapper">
+      <div class="page-content">
+
+        <!-- Header Bar -->
+        <div class="row header">
+          <div class="col-xs-12">
+            <div class="user pull-right">
+              <div class="item dropdown" uib-dropdown>
+                @if (Auth::guest())
+                <li><a href="{{ route('login') }}">{{__("messages.Login")}}</a></li>
+                @else
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  {{ Auth::user()->name }} <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li class="link">
+                    {!! link_to('admin/users/profile', __('messages.profile')) !!}
+                  </li>
+                  <li class="divider"></li>
+                  <li class="link">
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                      {{__("messages.Logout")}}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      {{ csrf_field() }}
+                    </form>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Header Bar -->
+
+        <!-- Main Content -->
+        @yield('content')
+
+      </div><!-- End Page Content -->
+    </div><!-- End Content Wrapper -->
+  </div><!-- End Page Wrapper -->
+  <script src="{{ asset('js/jquery.js') }}"></script>
+  <script src="{{ asset('js/jquery-ui.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/piexif.min.js') }}"></script>
+  <script src="{{ asset('js/sortable.min.js') }}"></script>
+  <script src="{{ asset('js/purify.min.js') }}"></script>
+  <script src="{{ asset('js/fileinput.min.js') }}"></script>
+  <script src="{{ asset('js/theme.min.js') }}"></script>
+  <!-- Scripts -->
+  @yield('page-script')
+</body>
+</html>
